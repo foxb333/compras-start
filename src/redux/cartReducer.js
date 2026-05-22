@@ -1,4 +1,4 @@
-import { ADD_ITEM, REMOVE_ITEM, CLEAR_CART } from './cartActions';
+import { ADD_ITEM, REMOVE_ITEM, CLEAR_CART, UPDATE_QUANTITY } from './cartActions';
 
 const initialState = {
   cartItems: [],
@@ -6,8 +6,7 @@ const initialState = {
 
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_ITEM:
-      // Verifica se o item já existe no carrinho para aumentar a quantidade
+    case ADD_ITEM: {
       const itemExists = state.cartItems.find(item => item.id === action.payload.id);
       
       if (itemExists) {
@@ -15,16 +14,16 @@ const cartReducer = (state = initialState, action) => {
           ...state,
           cartItems: state.cartItems.map(item =>
             item.id === action.payload.id 
-              ? { ...item, quantity: (item.quantity || 1) + 1 } 
+              ? { ...item, quantity: Math.min((item.quantity || 1) + 1, 100) } 
               : item
           ),
         };
       }
-      
       return {
         ...state,
         cartItems: [...state.cartItems, { ...action.payload, quantity: 1 }],
       };
+    }
 
     case REMOVE_ITEM:
       return {
@@ -32,10 +31,20 @@ const cartReducer = (state = initialState, action) => {
         cartItems: state.cartItems.filter(item => item.id !== action.payload),
       };
 
-    case CLEAR_CART:
+    case UPDATE_QUANTITY:
       return {
         ...state,
-        cartItems: [], // Retorna o estado com o array totalmente vazio
+        cartItems: state.cartItems.map(item =>
+          item.id === action.payload.id
+            ? { ...item, quantity: action.payload.quantity }
+            : item
+        ),
+      };
+
+    case CLEAR_CART:
+      return { 
+        ...state, 
+        cartItems: [] 
       };
 
     default:

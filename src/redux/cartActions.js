@@ -1,9 +1,8 @@
-// Definição dos tipos de ação
 export const ADD_ITEM = 'ADD_ITEM';
 export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const CLEAR_CART = 'CLEAR_CART';
+export const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
 
-// Action creators
 export const addItem = (item) => ({
   type: ADD_ITEM,
   payload: item,
@@ -14,7 +13,11 @@ export const removeItem = (id) => ({
   payload: id,
 });
 
-// Nova ação para esvaziar o carrinho
 export const clearCart = () => ({
   type: CLEAR_CART,
+});
+
+export const updateQuantity = (id, quantity) => ({
+  type: UPDATE_QUANTITY,
+  payload: { id, quantity },
 });
